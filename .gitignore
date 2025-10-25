@@ -1,0 +1,6 @@
+venv/
+datasets/
+runs/
+.git
+
+yolov8s.pt
