@@ -8,22 +8,29 @@ import yaml
 # Function to predict and save images
 def predict_and_save(model, image_path, output_path, output_path_txt):
     # Perform prediction
-    results = model.predict(image_path,conf=0.5)
+    results = model.predict(image_path, conf=0.5, device='cpu')  # Force CPU if needed
 
     result = results[0]
-    # Draw boxes on the image
-    img = result.plot()  # Plots the predictions directly on the image
 
-    # Save the result
-    cv2.imwrite(str(output_path), img)
-    # Save the bounding box data
+    # Convert RGB -> BGR for OpenCV
+    img = result.plot()
+    if img.shape[2] == 3:  # Check if 3 channels
+        img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+
+    # Ensure output folder exists
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Save the annotated image
+    success = cv2.imwrite(str(output_path), img)
+    if not success:
+        print(f"ERROR: Could not save image to {output_path}")
+
+    # Save bounding box labels
+    output_path_txt.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path_txt, 'w') as f:
         for box in result.boxes:
-            # Extract the class id and bounding box coordinates
             cls_id = int(box.cls)
             x_center, y_center, width, height = box.xywhn[0].tolist()
-            
-            # Write bbox information in the format [class_id, x_center, y_center, width, height]
             f.write(f"{cls_id} {x_center} {y_center} {width} {height}\n")
 
 

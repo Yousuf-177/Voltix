@@ -4,3 +4,4 @@ predictions/
 .git
 extra/
 model/
+preds_cpu/

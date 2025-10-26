@@ -47,24 +47,55 @@ pip install -r requirements.txt
 
 ---
 
-### Run Model on Custom Test Data
+
+## YOLO Detection Script: `yolo_detect.py`
+
+This script performs inference using a trained YOLO model on images, folders of images, or video files. It also saves annotated images and bounding box labels for further analysis.
+
+### **Usage**
 
 ```bash
-python yolo_detect.py --model yolov8s.pt --source usb0 --resolution 1280x720
+python yolo_detect.py --model <path_to_model> --source <source_path> [--thresh <confidence>] [--resolution <WxH>] [--record]
+````
+
+### **Arguments**
+
+| Argument       | Type   | Required | Default | Description                                                                                                                                                      |
+| -------------- | ------ | -------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--model`      | string | Yes      | None    | Path to the YOLO model file (e.g., `runs/detect/train/exp/weights/best.pt`). If not provided, defaults to `yolov8s.pt` in the script directory.                  |
+| `--source`     | string | Yes      | None    | Source for inference. Can be: <br>• Single image file (e.g., `test.jpg`) <br>• Folder of images (e.g., `images/`) <br>• Video file (e.g., `test.mp4`)            |
+| `--thresh`     | float  | No       | 0.5     | Minimum confidence threshold for displaying predicted objects. Values range from 0.0 to 1.0. Example: `--thresh 0.4`                                             |
+| `--resolution` | string | No       | None    | Resolution for displaying annotated images/videos in `WxH` format. If not specified, the script will use the source resolution. Example: `--resolution 1280x720` |
+| `--record`     | flag   | No       | False   | Record a video of the predictions. If used, `--resolution` must also be specified. Output is saved as `demo1.avi` in the script directory.                       |
+
+### **Outputs**
+
+1. **Annotated images:** Saved under `predictions/images/`
+2. **Bounding box labels:** Saved under `predictions/labels/` in YOLO format `[class_id x_center y_center width height]`
+3. **Validation Report:** The validation report of every testing will saved at `runs/detect/val{}`
+3. **Optional video recording:** If `--record` is used, saved as `demo1.avi`
+
+### **Example Commands**
+
+**Single image inference:**
+
+```bash
+python yolo_detect.py --model runs/detect/train/exp/weights/best.pt --source test1.jpg
 ```
 
-Here are all the arguments for yolo_detect.py:
+**Folder of images:**
 
-- `--model`: Path to a model file (e.g. `my_model.pt`). If the model isn't found, it will default to using `yolov8s.pt`.
-- `--source`: Source to run inference on. The options are:
-  - Image file (example: `test.jpg`)
-  - Folder of images (example: `my_images/test`)
-  - Video file (example: `testvid.mp4`)
-  - Index of a connected USB camera (example: `usb0`)
-  - Index of a connected Picamera module for Raspberry Pi (example: `picamera0`)
-- `--thresh` (optional): Minimum confidence threshold for displaying detected objects. Default value is 0.5 (example: `0.4`)
-- `--resolution` (optional): Resolution in WxH to display inference results at. If not specified, the program will match the source resolution. (example: `1280x720`)
-- `--record` (optional): Record a video of the results and save it as `demo1.avi`. (If using this option, the `--resolution` argument must also be specified.)
+```bash
+python yolo_detect.py --model runs/detect/train/exp/weights/best.pt --source images/ --thresh 0.4
+```
+
+**Video inference with recording:**
+
+```bash
+python yolo_detect.py --model runs/detect/train/exp/weights/best.pt --source test_video.mp4 --resolution 1280x720 --record
+```
+
+
 
 ---
 
@@ -171,10 +202,11 @@ Interpret the results as follows:
  ┣ 📜 train.py
  ┣ 📜 predict.py
  ┣ 📜 visualize.py
- ┣ 📜 yolo_model.pt
+ ┣ 📜 yolov8s.pt
  ┣ 📜 requirements.txt
  ┣ 📜 README.md
- ┗ 📜 data.yaml
+ ┣ 📜 yolo_detect.py
+ ┗ 📜 yolo_params.yaml
 ```
 
 ---
