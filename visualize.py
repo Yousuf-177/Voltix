@@ -5,7 +5,7 @@ import cv2
 class YoloVisualizer:
     MODE_TRAIN = 0
     MODE_VAL = 1
-    def __init__t(self, dataset_folder):
+    def __init__(self, dataset_folder):
         self.dataset_folder = dataset_folder
         classes_file = os.path.join(dataset_folder, "classes.txt")
         with open(classes_file, "r") as f:
@@ -81,5 +81,7 @@ class YoloVisualizer:
 
 
 if __name__ == "__main__":
-    vis = YoloVisualizer(os.path.dirname(__file__))
+    directory = os.getcwd()+"\datasets"
+    # print(os.path.join(os.getcwd(),"/datasets/"))
+    vis = YoloVisualizer(directory)
     vis.run()
