@@ -42,6 +42,9 @@ yolovenv\Scripts\activate         # On Windows
 pip install -r requirements.txt
 ```
 
+> 💻 **Note:** For detailed instructions on enabling GPU acceleration (NVIDIA, AMD, or Intel), please refer to the [GPU Setup Guide](./GPU_SETUP.md).
+
+
 ---
 
 ### Run Model on Custom Test Data
